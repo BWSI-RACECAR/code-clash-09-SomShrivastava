@@ -124,30 +124,14 @@ class Solution:
 
     def compute_convolution(self):
         convolutionA = []
-        """ 
-        [TODO] (1a) Do for every time step t_i:
-        """
-        for i in self.ti:
-            f = self.timesObs1A
-            g = self.timesObs2A
-            I = self.integrateTrapz(self.ti[:i+1], f(self.T) * g(i - self.T))
-            convolutionA.append(I)
-        """
-            [TODO] (1b) Define f
-        """
-        # f =
-        """
-            [TODO] (1c) Define g
-        """
-        # g = 
-        """
-            [TODO] (1d) Form the integrand f(tau)*g(t-tau) 
-        """
-        # I = 
-        """ 
-            [TODO] (1e) Integrate I over t_i[:i+1]
-        """
-        # ...
+        convolutionA = []
+        for i in range(len(self.data.ti)):
+            f = self.f1A[:i+1]
+            g = self.f2A[i::-1]
+            c = []
+            for j in range(len(f)):
+                c.append(f[j] * g[j])
+            convolutionA.append(self.integrateTrapz(c, self.data.ti[:i+1]))
         return convolutionA
 
     def compute_cdf(self):
@@ -156,23 +140,18 @@ class Solution:
         return [self.integrateTrapz(self.convolutionA[:i], self.data.ti[:i]) for i in self.data.ti[1:]]
         
     def search_ppf(cdf_values, target, epsilon=1e-6):
-        """
-        Calculate the PPF (point percent function = inverse cuumulative distribution function [CDF])
-        of a probability distribution using search.
-        
-        This will find the X axis value of a given y axis value input
-        
-        cdf_values (list): A sorted list representing the CDF from 0 to 1.
-        target (float): The target probability for which the PPF is computed.
-        epsilon (float): The tolerance level for the search.
-
-        return (float): The PPF of the probability distribution.
-        """
-        
-        """
-        [TODO] (2) Implement search function here
-        """
-        return    
+        low = 0
+        high = len(cdf_values) - 1
+        while high - low > 1:
+            mid = (low + high) // 2
+            if cdf_values[mid] < target:
+                low = mid
+            else:
+                high = mid
+        if abs(cdf_values[high] - target) < epsilon:
+            return high
+        else:
+            return low
 
 def main():
     data_input = DataInput()
