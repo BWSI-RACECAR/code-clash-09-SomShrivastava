@@ -139,7 +139,7 @@ class Solution:
         self.convolutionA = [self.convolutionA[i]/A for i in range(len(self.convolutionA))]
         return [self.integrateTrapz(self.convolutionA[:i], self.data.ti[:i]) for i in self.data.ti[1:]]
         
-    def search_ppf(cdf_values, target, epsilon=1e-6):
+    def search_ppf(self, cdf_values, target, epsilon=1e-6):
         low = 0
         high = len(cdf_values) - 1
         while high - low > 1:
